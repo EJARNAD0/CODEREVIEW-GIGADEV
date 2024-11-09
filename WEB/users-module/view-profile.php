@@ -85,6 +85,7 @@ if ($id && $user->get_username($id)) {
   </div>
 </div>
 <!-- Password Change Modal with Security Enhancements -->
+<!-- Password Change Modal with Enhanced Validation -->
 <div id="id02" class="modal">
   <div id="form-update" class="modal-content">
     <div class="container">
@@ -136,37 +137,19 @@ if ($id && $user->get_username($id)) {
     </div>
     <div class="modal-body">
       <p>Provide required details...</p>
-      <form method="POST" id="usernameForm" action="processes/process.user.php?action=updateusername" onsubmit="return validateUsernameForm()">
-        <input type="hidden" id="userid" name="userid" value="<?php echo htmlspecialchars($id); ?>"/>
-        
-        <label for="currentUsername">Current Username</label>
-        <input type="text" id="currentUsername" class="input" name="currentUsername" placeholder="Current Username" required> 
-        
+      <form method="POST" id="usernameForm" action="processes/process.user.php?action=updateusername">
+        <input type="hidden" id="userid" name="userid" value="<?php echo htmlspecialchars($id);?>"/>
+        <label for="username">Current Username</label>
+        <input type="text" id="username" class="input" name="username" placeholder="Current Username"> 
         <label for="crpassword">Current Password</label>
-        <input type="password" id="crpassword" class="input" name="crpassword" placeholder="Current Password" required> 
-        
+        <input type="password" id="crpassword" class="input" name="crpassword" placeholder="Current Password"> 
         <label for="newusername">New Username</label>
-        <input type="text" id="newusername" class="input" name="newusername" placeholder="New Username" required>           
-      </form>
+        <input type="text" id="newusername" class="input" name="newusername" placeholder="New Username">           
+      </form> 
       <div class="modal-footer">
         <button class="submitbtn" onclick="usernameSubmit()">Confirm</button>
         <button class="cancelbtn" onclick="document.getElementById('id03').style.display='none'">Cancel</button>
       </div>
-    </div>
-  </div>
-</div>
-
-<!-- Custom Error Modal -->
-<div id="errorModal" class="modal" style="display: none;">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2>Error</h2>
-    </div>
-    <div class="modal-body">
-      <p id="errorMessage">All fields are required. Please fill out every field.</p>
-    </div>
-    <div class="modal-footer">
-      <button class="confirmbtn" onclick="closeErrorModal()">OK</button>
     </div>
   </div>
 </div>
@@ -184,127 +167,98 @@ if ($id && $user->get_username($id)) {
   </div>
 </div>
 <script>
-// Validate the Username Form
-function validateUsernameForm() {
-  const currentUsername = document.getElementById('currentUsername').value.trim();
-  const currentPassword = document.getElementById('crpassword').value.trim();
-  const newUsername = document.getElementById('newusername').value.trim();
+  // Password Strength Check
+  function checkPasswordStrength() {
+    const password = document.getElementById('npassword').value;
+    const strengthText = document.getElementById('password-strength-text');
+    const strengthDiv = document.getElementById('password-strength');
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  if (!currentUsername || !currentPassword || !newUsername) {
-    showErrorModal("All fields are required. Please fill out every field.");
-    return false; // Prevent form submission
+    if (password.length === 0) {
+      strengthDiv.style.display = "none";
+    } else if (strongPasswordRegex.test(password)) {
+      strengthText.textContent = "Strong";
+      strengthText.style.color = "green";
+      strengthDiv.style.display = "block";
+    } else {
+      strengthText.textContent = "Weak";
+      strengthText.style.color = "red";
+      strengthDiv.style.display = "block";
+    }
   }
-  return true; // Allow form submission
-}
 
-// Show Error Modal
-function showErrorModal(message) {
-  document.getElementById('errorMessage').textContent = message;
-  document.getElementById('errorModal').style.display = 'block';
-}
+  // Password Matching Check
+  function checkPasswordsMatch() {
+    const newPassword = document.getElementById('npassword').value;
+    const confirmPassword = document.getElementById('copassword').value;
+    const submitButton = document.getElementById("confirmPasswordBtn");
 
-// Close Error Modal
-function closeErrorModal() {
-  document.getElementById('errorModal').style.display = 'none';
-}
+    if (confirmPassword === "") {
+      submitButton.disabled = true;
+    } else if (newPassword === confirmPassword) {
+      submitButton.disabled = false;
+    } else {
+      submitButton.disabled = true;
+    }
+  }
 
-// Username Submit Function
-function usernameSubmit() {
-  if (validateUsernameForm()) {
+  // Toggle Password Visibility
+  function togglePasswordVisibility() {
+    const fields = ['crpassword', 'npassword', 'copassword'];
+    fields.forEach(fieldId => {
+      const field = document.getElementById(fieldId);
+      field.type = field.type === 'password' ? 'text' : 'password';
+    });
+  }
+
+  // Close modal if user clicks outside
+  window.onclick = function(event) {
+    if (event.target.classList.contains('modal')) {
+      event.target.style.display = "none";
+    }
+  };
+
+  // Redirect Functions
+  function enableSubmit() {
+    window.location.href = "processes/process.user.php?action=status&id=<?php echo htmlspecialchars($id);?>&status=1";
+  }
+
+  function disableSubmit() {
+    window.location.href = "processes/process.user.php?action=status&id=<?php echo htmlspecialchars($id);?>&status=0";
+  }
+
+  // Show custom alert modal
+  function showAlert(message) {
+    const alertModal = document.getElementById('customAlert');
+    document.getElementById('alertMessage').innerText = message;
+    alertModal.style.display = 'block';
+  }
+
+  // Close custom alert modal
+  function closeAlert() {
+    document.getElementById('customAlert').style.display = 'none';
+  }
+
+  // Password Submit Function with Custom Alert
+  function passwordSubmit() {
+    const newPassword = document.getElementById('npassword').value;
+    const confirmPassword = document.getElementById('copassword').value;
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!strongPasswordRegex.test(newPassword)) {
+      showAlert("Password does not meet the required strength. Please ensure it meets all requirements.");
+      return false;
+    }
+    if (newPassword !== confirmPassword) {
+      showAlert("Passwords do not match!");
+      return false;
+    }
+    document.getElementById("passwordForm").submit();
+  }
+
+  // Username Submit Function
+  function usernameSubmit() {
     document.getElementById("usernameForm").submit();
   }
-}
-
-// Password Strength Check
-function checkPasswordStrength() {
-  const password = document.getElementById('npassword').value;
-  const strengthText = document.getElementById('password-strength-text');
-  const strengthDiv = document.getElementById('password-strength');
-  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  if (password.length === 0) {
-    strengthDiv.style.display = "none";
-  } else if (strongPasswordRegex.test(password)) {
-    strengthText.textContent = "Strong";
-    strengthText.style.color = "green";
-    strengthDiv.style.display = "block";
-  } else {
-    strengthText.textContent = "Weak";
-    strengthText.style.color = "red";
-    strengthDiv.style.display = "block";
-  }
-}
-
-// Password Matching Check
-function checkPasswordsMatch() {
-  const newPassword = document.getElementById('npassword').value;
-  const confirmPassword = document.getElementById('copassword').value;
-  const submitButton = document.getElementById("confirmPasswordBtn");
-
-  if (confirmPassword === "") {
-    submitButton.disabled = true;
-  } else if (newPassword === confirmPassword) {
-    submitButton.disabled = false;
-  } else {
-    submitButton.disabled = true;
-  }
-}
-
-// Toggle Password Visibility
-function togglePasswordVisibility() {
-  const fields = ['crpassword', 'npassword', 'copassword'];
-  fields.forEach(fieldId => {
-    const field = document.getElementById(fieldId);
-    field.type = field.type === 'password' ? 'text' : 'password';
-  });
-}
-
-// Close modal if user clicks outside
-window.onclick = function(event) {
-  const modals = document.getElementsByClassName('modal');
-  Array.from(modals).forEach(modal => {
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-};
-
-// Redirect Functions
-function enableSubmit() {
-  window.location.href = "processes/process.user.php?action=status&id=<?php echo htmlspecialchars($id);?>&status=1";
-}
-
-function disableSubmit() {
-  window.location.href = "processes/process.user.php?action=status&id=<?php echo htmlspecialchars($id);?>&status=0";
-}
-
-// Show custom alert modal
-function showAlert(message) {
-  const alertModal = document.getElementById('customAlert');
-  document.getElementById('alertMessage').innerText = message;
-  alertModal.style.display = 'block';
-}
-
-// Close custom alert modal
-function closeAlert() {
-  document.getElementById('customAlert').style.display = 'none';
-}
-
-// Password Submit Function with Custom Alert
-function passwordSubmit() {
-  const newPassword = document.getElementById('npassword').value;
-  const confirmPassword = document.getElementById('copassword').value;
-  const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  if (!strongPasswordRegex.test(newPassword)) {
-    showAlert("Password does not meet the required strength. Please ensure it meets all requirements.");
-    return false;
-  }
-  if (newPassword !== confirmPassword) {
-    showAlert("Passwords do not match!");
-    return false;
-  }
-  document.getElementById("passwordForm").submit();
-}
 </script>
 <?php } else { echo "User profile not found."; } ?>
