@@ -9,19 +9,19 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // Define constants for database connection
 if (!defined('DB_SERVER')) {
-    define('DB_SERVER', 'localhost:3306'); // Database server address
+    define('DB_SERVER', ''); // Database server address
 }
 
 if (!defined('DB_USERNAME')) {
-    define('DB_USERNAME', 'wanderej_plato'); // Database username
+    define('DB_USERNAME', ''); // Database username
 }
 
 if (!defined('DB_PASSWORD')) {
-    define('DB_PASSWORD', 'Demesa123'); // Database password (leave empty if none)
+    define('DB_PASSWORD', ''); // Database password (leave empty if none)
 }
 
 if (!defined('DB_DATABASE')) {
-    define('DB_DATABASE', 'wanderej_plato'); // Database name
+    define('DB_DATABASE', ''); // Database name
 }
 
 // Create a connection to the database
@@ -34,3 +34,5 @@ if (!$conn) {
 
 
 ?>
+
+// Gin empty lang namon sir kay public ang github 
