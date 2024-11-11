@@ -5,5 +5,5 @@
 ### User Credentials
 | Role       | Username   | Password        |
 |------------|------------|-----------------|
-| **Admin**  | `admin`    | `Admin123`      |
+| **Admin**  | `admin`    | `Admin123!`      |
 | **Secretary** | `secretary` | `Secretary123!` |
