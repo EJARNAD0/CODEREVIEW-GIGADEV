@@ -1,8 +1,9 @@
-URL: plato.helioho.st
-User Credentials:
-                  username: admin
-                  password: Admin123
+## Access Details
 
-                  username: secretary  
-                  password: Secretary123!
-      
+**URL:** [plato.helioho.st](http://plato.helioho.st)
+
+### User Credentials
+| Role       | Username   | Password        |
+|------------|------------|-----------------|
+| **Admin**  | `admin`    | `Admin123`      |
+| **Secretary** | `secretary` | `Secretary123!` |
