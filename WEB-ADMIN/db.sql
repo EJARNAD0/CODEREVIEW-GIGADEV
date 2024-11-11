@@ -1,6 +1,6 @@
 USE db_plato;
 
--- Drop tables if they exist (to avoid errors on re-running the script)
+-- Drop tables if they exist 
 DROP TABLE IF EXISTS `user_feedback`;
 DROP TABLE IF EXISTS `donations`;
 DROP TABLE IF EXISTS `notifications`;
