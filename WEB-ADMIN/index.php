@@ -31,7 +31,6 @@ if ($user_access === 'user') {
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
