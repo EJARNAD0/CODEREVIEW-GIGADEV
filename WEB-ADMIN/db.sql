@@ -1,4 +1,4 @@
-USE db_plato;
+USE wanderej_plato;
 
 -- Drop tables if they exist 
 DROP TABLE IF EXISTS `user_feedback`;
