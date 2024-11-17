@@ -8,7 +8,6 @@ if (!$req) {
     exit;
 }
 ?>
-
 <h3>Request Management</h3>
 <div class="btn-box">
     <a class="btn-jsactive" onclick="document.getElementById('id01').style.display='block'">
