@@ -19,7 +19,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
 <table>
     <thead>
         <tr>
-            <th>#</th> 
+           <th>Request ID</th>
             <th>Name</th>
             <th>Request Details</th>
             <th>Status</th>
@@ -31,7 +31,7 @@ $action = isset($_GET['action']) ? $_GET['action'] : '';
             <?php $counter = 1; // Initialize counter ?>
             <?php foreach ($all_requests as $req): ?>
             <tr>
-                <td><?php echo $counter++; // Increment counter for each row ?></td> <!-- Display the current counter value -->
+                <td><?php echo htmlspecialchars($req['request_id']); ?></td>
                 <td>
                     <a href="index.php?page=request&action=view&id=<?php echo $req['request_id']; ?>">
                         <?php echo htmlspecialchars($req['user_firstname'] . ' ' . $req['user_lastname']); ?>
